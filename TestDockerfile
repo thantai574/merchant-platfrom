@@ -1,0 +1,19 @@
+# stage 1
+FROM golang:1.14-alpine
+
+RUN apk --update add make git
+
+WORKDIR /app
+
+ENV GO111MODULE=on
+ENV GOPRIVATE=gitlab.com
+ENV GOPROXY=direct
+ENV CGO_ENABLED=0
+ENV GOOS=linux
+ENV GOARCH=amd64
+
+COPY . .
+COPY ./config_test_gitlab.json ./config.json
+COPY ./config_test_gitlab.json ./config_test.json
+
+CMD make test

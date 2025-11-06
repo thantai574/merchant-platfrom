@@ -1,0 +1,3 @@
+[submodule "protobufs"]
+	path = protobufs
+	url = https://gitlab.com/wallet-gpay/protobufs.git

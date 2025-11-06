@@ -1,0 +1,66 @@
+stages:
+  - test
+  - build-dev
+  - deploy-dev
+  - failure_notify
+
+before_script:
+  - docker version
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+
+variables:
+  TELE_CHAT_ID: -1001421406352
+
+test:
+  stage: test
+  image: docker:19.03.11
+  services:
+    - docker:19.03.11-dind
+  before_script:
+    - apk add py3-pip py3-setuptools python3 python3-dev libffi-dev openssl-dev gcc libc-dev make
+    - pip install -U pip setuptools
+    - pip install 'docker-compose==1.23.2'
+    - docker-compose version
+    - cp -rf ./config_test_gitlab.json ./config_test.json
+  script:
+    - docker-compose up --build --exit-code-from tests
+  only:
+    - merge_requests
+    - develop
+
+build-dev:
+  stage: build-dev
+  image: docker:19.03.11
+  services:
+    - docker:19.03.11-dind
+  before_script:
+    - apk add bash git
+    - docker login -u $CI_DEPLOY_USER -p $CI_DEPLOY_PASSWORD $CI_REGISTRY
+  script:
+    - /bin/bash ./build-dev.sh $CI_REGISTRY_IMAGE $CI_COMMIT_SHORT_SHA
+  only:
+    - develop
+    - master
+
+deploy-dev:
+  stage: deploy-dev
+  image: alpine:3.12
+  variables:
+    SERVICE_ID: g-pay-dev_transaction
+    SERVICE_WORKER_ID: g-pay-dev_transaction_worker
+  before_script:
+    - apk add curl git
+  script:
+    - 'curl --fail -X POST --header "Content-Type: application/json" --header "Accept: application/json" --header "authorization: Bearer $SWARMPIT_TOKEN" "http://1.55.214.191:888/api/services/lihwkehh4o44nyrm5yxwooq5v/redeploy?tag=$CI_COMMIT_SHORT_SHA"'
+    - 'curl --fail -X POST --header "content-type: application/json" --data "{\"chat_id\": \"$TELE_CHAT_ID\", \"text\": \"Order service SUCCESS deployed for commit [$CI_COMMIT_SHORT_SHA]($CI_PROJECT_URL/-/commit/$CI_COMMIT_SHORT_SHA)\", \"parse_mode\": \"MarkdownV2\"}" "https://api.telegram.org/bot$TELE_GITLABCI_TOKEN/sendMessage"'
+  only:
+    - develop
+
+failure_notify:
+  stage: failure_notify
+  image: alpine:3.12
+  before_script:
+    - apk add curl
+  script:
+    - 'curl --fail -X POST --header "content-type: application/json" --data "{\"chat_id\": \"$TELE_CHAT_ID\", \"text\": \"Order service FAILED to deploy with [Pipeline]($CI_PROJECT_URL/-/pipelines/$CI_PIPELINE_ID)\", \"parse_mode\": \"MarkdownV2\"}" "https://api.telegram.org/bot$TELE_GITLABCI_TOKEN/sendMessage"'
+  when: on_failure

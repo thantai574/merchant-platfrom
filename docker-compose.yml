@@ -1,0 +1,34 @@
+version: '3.1'
+
+services:
+
+
+  tests:
+    build:
+      context: ./
+      dockerfile: TestDockerfile
+    depends_on:
+      - mongo
+      - rabbitmq
+
+  mongo:
+    image: mongo:4.2
+    restart: "no"
+    logging:
+      driver: none
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: root
+    ports:
+      - 27017:27017
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    environment:
+      RABBITMQ_DEFAULT_USER: "admin"
+      RABBITMQ_DEFAULT_PASS: "admin"
+      RABBITMQ_DEFAULT_VHOST: "/"
+    ports:
+      - 5672:5672
+    logging:
+      driver: none

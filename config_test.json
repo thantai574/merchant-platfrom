@@ -1,0 +1,42 @@
+{
+  "port": "10001",
+  "env": "production",
+  "max_pool_size": 1000,
+  "mongo_uri": "mongodb://root:root@localhost:27017/",
+  "mqtt_uri": "tcp://mqtt-dev.g-pay.vn:8083",
+  "redis": {
+    "address": "localhost:6379",
+    "password": "",
+    "db": 0
+  },
+  "queue_uri": "amqp://admin:admin@localhost:5672/",
+  "services": {
+    "service_core": "go.micro.srv.core",
+    "service_transaction": "go.micro.srv.transaction",
+    "service_user": "go.micro.srv.user",
+    "service_promotion": "go.micro.srv.promotion",
+    "service_merchant_fee": "go.micro.srv.merchantfee",
+    "service_card": "1.55.214.191:20001"
+  },
+  "kafka_config": {
+    "zookeepers": "34.87.84.225:2181",
+    "brokers": "35.240.196.102:9094"
+  },
+  "linked_bank": {
+    "uri": "mongodb://admin:admin!213443@43.239.223.122:27017/scb",
+    "db_name": "scb",
+    "api_endpoint": "https://sacombank-dev-n6v6ky2r5a-de.a.run.app",
+    "vccb_endpoint": "http://35.198.244.15"
+  },
+  "merchant_callback": {
+    "uri": "https://mc-api-client.g-pay.vn/api/v2/",
+    "secret_key": "secret-key",
+    "secret_value": "6TvVVRHq8t2AX4RQ2FegeA8uWnhrVj6X"
+  },
+  "mqtt_internal_uri": {
+    "uri": "34.126.189.237:1883",
+    "username": "mqtt",
+    "password": "46ee7eb02d4c3b504ce79c054464bfd2",
+    "prefix": "e77989ed21758e78331b20e477fc5582"
+  }
+}

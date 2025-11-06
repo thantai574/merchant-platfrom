@@ -1,0 +1,55 @@
+{
+  "port": "10001",
+  "env": "DEV",
+  "job": false,
+  "max_pool_size": 1000,
+  "mongo_uri": "mongodb://root:Vietnam2020@1.55.214.191:20003/",
+  "mqtt_uri": "tcp://mqtt-dev.g-pay.vn:8083",
+  "redis": {
+    "address": "localhost:6379",
+    "password": "",
+    "db": 0
+  },
+  "queue_uri": "amqp://admin:admin@1.55.214.191:5672/",
+  "services": {
+    "service_core": "go.micro.srv.core",
+    "service_transaction": "go.micro.srv.transaction",
+    "service_user": "go.micro.srv.user",
+    "service_promotion": "go.micro.srv.promotion",
+    "service_merchant_fee": "go.micro.srv.merchantfee",
+    "service_card": "1.55.214.191:20001"
+  },
+  "kafka_config": {
+    "zookeepers": "34.87.84.225:2181,34.87.84.225:2888,34.87.84.225:3888",
+    "brokers": "35.240.196.102:9094,35.240.196.172:9094,35.240.154.13:9094"
+  },
+  "linked_bank": {
+    "uri": "mongodb://admin:admin!213443@1.55.214.191:20003/scb",
+    "db_name": "scb",
+    "api_endpoint": "https://sacombank-dev-n6v6ky2r5a-de.a.run.app",
+    "vccb_endpoint": "http://35.198.244.15"
+  },
+  "bank_gw_uri": "http://34.126.107.53:80/",
+  "firebase_key": "AIzaSyAK-EUEIS_1w9uRmbIuKeT8EGfpf-itwOQ",
+  "telegram_channel_id": {
+    "qr": -1001102296128,
+    "refund": -1001334582331,
+    "va": -1001334582331
+  },
+  "expire_time": 10,
+  "fraud_uri": "http://1.55.214.191:8887/",
+  "merchant_callback": {
+    "uri": "https://mc-api-client.g-pay.vn/api/v2/",
+    "secret_key": "secret-key",
+    "secret_value": "6TvVVRHq8t2AX4RQ2FegeA8uWnhrVj6X"
+  },
+  "va_msb": {
+    "gpay_identifier": "968668888"
+  },
+  "mqtt_internal_uri": {
+    "uri": "34.126.189.237:1883",
+    "username": "mqtt",
+    "password": "46ee7eb02d4c3b504ce79c054464bfd2",
+    "prefix": "e77989ed21758e78331b20e477fc5582"
+  }
+}

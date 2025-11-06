@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-order-system
+  namespace: wallet
+spec:
+  selector:
+    matchLabels:
+      service: service-order-system
+  replicas: 1
+  strategy: {}
+  template:
+    metadata:
+      labels:
+        service: service-order-system
+    spec:
+      terminationGracePeriodSeconds: 120
+      containers:
+        - args:
+            - ./engine
+            - --registry=etcd
+            - --client_retries=0
+            - --registry_address=ectd-service.etcd:2379
+          image: gcr.io/strong-minutia-269302/service-order-system
+          name: service-order
+          resources: {}
+          workingDir: /app
+          lifecycle:
+            preStop:
+              exec:
+                command: ["/bin/sh", "-c", "sleep 15"]
+      restartPolicy: Always
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-order-system
+  namespace: wallet
+spec:
+  ports:
+    - port: 10001
+      protocol: TCP
+      targetPort: 10001
+  selector:
+    service: service-order-system
+  type: LoadBalancer
